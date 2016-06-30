@@ -1,0 +1,59 @@
+<div ng-init="getProjects()">
+    <h1>Reports</h1>
+     <div class="form-group">
+        <label for="chooseProject">Choose project:</label>
+        <select ng-change="setProject()" id="chooseProject" ng-options="p.title for p in projects track by p.title" ng-model="curProject">
+            <option></option>    
+        </select>    
+    </div>
+    
+    <div ng-show="curProject != null">
+        <br/>
+        
+        
+        <div class="col-md-4">
+            <h4>Percentage of assigned tasks per user</h4>
+            <canvas class="chart chart-pie" chart-data="data1" chart-labels="labels1">
+            </canvas>
+        </div>
+        
+        <div class="col-md-4">
+            <h4>Percentage of completed tasks per user</h4>
+            <canvas class="chart chart-bar" chart-data="data2" chart-labels="labels2" chart-options="options2">
+            </canvas>
+        </div>
+        
+        <div class="col-md-4">
+            <h4>Created tasks per day</h4>
+             <canvas class="chart chart-bar" chart-data="data3" chart-labels="labels3">
+            </canvas>
+        </div>
+        
+        <div class="col-md-4">
+            <br/>
+            <br/>
+            <br/>
+            <h4>Completed tasks per day</h4>
+             <canvas class="chart chart-bar" chart-data="data4" chart-labels="labels4">
+            </canvas>
+        </div>
+        
+        <div class="col-md-4">
+            <br/>
+            
+            <div class="form-group">
+                <label for="chooseUser">Choose user:</label>
+                <select ng-change="setUser()" id="chooseUser" ng-options="u.username for u in curProject.usersOnProject track by u.username" ng-model="curUser">
+                    <option></option>    
+                </select>
+            </div>
+            <div>
+                <h4>Completed tasks per user per day</h4>
+                <canvas class="chart chart-bar" chart-data="data5" chart-labels="labels5">
+                </canvas>
+            </div>
+        </div>
+    </div>
+        
+    
+</div>

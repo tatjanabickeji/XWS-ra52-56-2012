@@ -1,0 +1,165 @@
+<div class="container" data-ng-init="getTask()">
+	<div class="row">
+    <div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><strong>{{task.title}}</strong></h3>
+			</div>
+			
+			<div class="panel-body">
+				<p><b>Code</b> : {{task.code}}</p>
+				
+				<p><b>Created at</b> : <span ng-bind="task.createdAt | date:'dd/MM/yyyy HH:mm:ss'"></span></p>
+				<p><b>Creator</b> : {{task.creator.username}}</p>
+				
+				<form ng-submit="changeTask()" role="form">
+ 					<div class="form-group">
+						<label for="title">Title</label>
+						<input type="text" ng-model="taskChange.title"  class="form-control" id="title" placeholder="Title">
+					</div>
+                     <div class="form-group">
+						<label for="description">Description</label>
+						<textarea style="resize:vertical;" rows="5" ng-model="taskChange.description"  class="form-control" id="description" placeholder="Description"></textarea>
+					</div>
+                     <div class="form-group">
+						<label for="assignedTo">Assigned to:</label>
+						<select ng-options="user.username for user in project.usersOnProject track by user.username" ng-model="taskChange.assigned_to" class="form-control" id="assignedTo"></select>
+					</div>					
+					<div class="form-group" ng-init="getProject()">
+						<label for="status">Status</label>
+						<select ng-options="s.name for s in STATUS track by s.value" ng-model="taskChange.status" class="form-control" id="status"></select>
+					</div>
+                    <div class="form-group">
+						<label for="priority">Priority</label>
+						<select ng-options="p.name for p in PRIORITY track by p.value" ng-model="taskChange.priority" class="form-control" id="priority"></select>
+					</div>
+					<div class="form-group">
+						<label for="deadLine">Deadline</label>
+						<input type="date" ng-model="taskChange.deadline">
+					</div>
+					<p align="center">
+						<button type="submit" class="btn btn-sm btn-success">Save changes</button>
+					</p>
+				</form>
+  			</div>
+		</div>
+	</div>
+	
+    <div style="display:inline-block;width:25% ; float:right;" ng-controller="CommentController">
+	
+		<!-- Komentari -->
+		<div class="container" >
+			<div class="row">
+				
+					<h3>Comments</h3>
+				
+				<!-- /col-sm-12 -->
+			</div>
+			<!-- /row -->
+			<div class="row" ng-repeat="comment in task.comments">
+				<div class="col-sm-1">
+					<div class="thumbnail">
+						<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+					</div>
+					<!-- /thumbnail -->
+				</div>
+					<!-- /col-sm-1 -->
+				<div class="col-sm-5">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<strong>{{comment.creator.username}}</strong>
+							<span class="text-muted">commented at <span ng-bind="comment.updatedAt | date:'dd/MM/yyyy HH:mm:ss'"></span></span>
+							<span class="pull-right">
+								<span ng-if="!comment.editMode && (comment.creator._id == user._id || user.role)">
+									<button ng-click="enableEditMode(comment)" class="btn btn-warning btn-xs">Edit</button>
+									<button ng-click="deleteComment(comment._id)" class="btn btn-danger btn-xs">Delete</button>
+								</span>
+								
+								<span ng-if="comment.editMode">
+									<button ng-click="changeComment(comment,commentChange.text)" class="btn btn-success btn-xs">Save</button>
+									<button ng-click="disableEditMode(comment)" class="btn btn-danger btn-xs">Cancel</button>
+								</span>
+							</span>
+						</div>
+						<div class="panel-body">
+							<span ng-if="!comment.editMode">{{comment.text}}</span>
+							<span ng-if="comment.editMode"><textarea style="resize:vertical;" rows="5" ng-model="commentChange.text"  class="form-control" id="text" placeholder="Text"></textarea></span>
+						</div>
+						<!-- /panel-body -->
+					</div>
+					<!-- /panel panel-default -->
+				</div>
+				<!-- /col-sm-5 -->
+				
+			</div>
+			<!-- /row -->
+			<br/>
+			<br/>
+			<br/>
+			<!-- New comment -->
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="panel panel-success">
+						<div class="panel-heading">
+							<h3 class="panel-title"><strong>Add new comment</strong></h3>
+						</div>
+						
+						<div class="panel-body">
+							<form ng-submit="addComment()" role="form">
+								<div class="form-group">
+									<label for="text">Text</label>
+									<textarea style="resize:vertical;" rows="5" ng-model="newComment"  class="form-control" id="text" placeholder="Text"></textarea>
+								</div>
+								<p align="center">
+									<button type="submit" class="btn btn-sm btn-success">Add comment</button>
+								</p>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			<!-- /container -->
+		
+		
+	</div>
+	</div>
+	<div class="row">
+		
+			<div>
+				<h3>Task History</h3>
+			</div>
+			<div>
+				<table class="table table-striped">
+						
+					<thead>
+					<tr>
+						
+						<th>Title</th>
+						<th>Description</th>
+						<th>Assigned to</th>
+						<th>Status</th>
+						<th>Priority</th>
+						<th>Deadline</th>
+						<th>Date of update</th>
+					</tr>
+					</thead>
+					
+					<tbody>
+					<tr ng-repeat="taskUpdate in task.taskUpdateHistory | orderBy: 'dateOfChange'">
+						
+						<td>{{taskUpdate.taskChanges.title}}</td>
+						<td>{{taskUpdate.taskChanges.description}}</td>
+						<td>{{taskUpdate.taskChanges.assigned_to.username}}</td>
+						<td>{{taskUpdate.taskChanges.status.name}}</td>
+						<td>{{taskUpdate.taskChanges.priority.name}}</td>
+						<td><p ng-bind="taskUpdate.taskChanges.deadline | date:'dd/MM/yyyy'"></p></td>
+						<td><p ng-bind="taskUpdate.dateOfChange | date:'dd/MM/yyyy HH:mm:ss'"></p></td>
+					</tr>  
+					</tbody>
+				</table>
+			</div>
+	</div>
+	
+	
+</div>

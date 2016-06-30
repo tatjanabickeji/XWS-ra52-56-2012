@@ -1,0 +1,63 @@
+<div data-ng-init="getProject()">
+    <h1>{{project.title}}</h1>
+    <p><b>Code</b> : {{project.code}}</p>
+    <p><b>Description</b> : {{project.description}}</p>
+    <p><b>Deadline</b> : <span ng-bind="project.deadline | date:'dd/MM/yyyy'"></span></p>
+    <p><b>Creator</b> : {{project.creator.username}}</p>
+    <br/>
+    <div>
+        <h3>Tasks</h3> 
+        <table class="table table-striped">
+                
+            <thead>
+            <tr>
+                <th>Code</th>  
+                <th>Title</th>
+                <th>Description</th>
+                <th>Creator</th>
+                <th>Assigned to</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Created at</th>
+                <th>Deadline</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+            <tr ng-repeat="task in project.tasks">
+                <td><a ui-sref="task({projectId: project._id, taskId:task._id})">{{task.code}}</a></td>
+                <td>{{task.title}}</td>
+                <td>{{task.description}}</td>
+                <td>{{task.creator.username}}</td>
+                <td>{{task.assigned_to.username}}</td>
+                <td>{{task.status.name}}</td>
+                <td>{{task.priority.name}}</td>
+                <td><span ng-bind="task.createdAt | date:'dd/MM/yyyy HH:mm:ss'"></span></td>
+                <td><span ng-bind="task.deadline | date:'dd/MM/yyyy'"></span></td>
+            </tr>  
+            </tbody>
+        </table>
+    </div>
+    
+    
+    <div ng-include="'task/templates/addTask.html'"></div>
+    <br/>
+    <br/>
+    <div>
+        <h4>Current team: </h4>
+        <ul>
+            <li ng-repeat="u in team.team">{{u.username}}</li>
+        </ul>
+    </div>
+    <div ng-show="user.role==true">
+        <form ng-submit="setUsersOnProject()">
+            <div class="form-group" data-ng-init="getAllUsers()">
+                <h4>Choose team: </h4>
+                <multiselect data-compare-by="username" ng-model="team.team" options="u.username for u in allUsers" data-multiple="true"></multiselect>
+                
+            </div>
+            <button ng-click="resetUsersOnProject()" type="button" class="btn btn-warning">Reset</button>
+            <input type="submit" class="btn btn-success" value="Set team">
+        </form>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div data-ng-init="getTasks()">
+    
+    <!-- Selecti -->
+    <div class="col-md-2">
+            <div class="form-group">
+                    <label for="priority">Priority filter</label>
+                    <multiselect data-compare-by="value" ng-model="taskFilter.priority" options="p.name for p in PRIORITY" data-multiple="true"></multiselect>
+                    
+            </div>
+            <div class="form-group">
+                    <label for="priority">Status filter</label>
+                    <multiselect data-compare-by="value" ng-model="taskFilter.status" options="s.name for s in STATUS" data-multiple="true"></multiselect>
+            </div>
+        </form>
+    </div>
+    <!-- Tabela taskova --> 
+    
+    <table class="table table-striped">
+		<thead>
+            <tr>
+                <th>Code</th>
+				<th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned to</th>
+                <th>Creator</th>
+                <th>Created at</th>
+                <th>Deadline</th>
+			</tr>
+         </thead>
+         <tbody>
+             <tr ng-repeat="task in tasks | orderBy : '-priority.value'" 
+             ng-show="filter(task)">
+                 <td><a ng-init="getProjectForTask(task._id)" ui-sref="task({projectId:projectIds[$index],taskId: task._id})">{{ task.code }}</a></td>
+                 <td>{{ task.title }}</td>
+                 <td>{{ task.description }}</td>
+                 <td>{{ task.status.name}}</td>
+                 <td>{{ task.priority.name}}</td>
+                 <td>{{ task.assigned_to.username}}</td>
+                 <td>{{ task.creator.username}}</td>
+                 <td><span ng-bind="task.createdAt | date:'dd/MM/yyyy HH:mm:ss'"></span></td>
+                 <td><span ng-bind="task.deadline | date:'dd/MM/yyyy'"></span></td>
+             </tr>
+         </tbody>
+    </table>    
+</div>

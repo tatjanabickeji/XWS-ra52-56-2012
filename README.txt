@@ -1,0 +1,1 @@
+U terminal ukucati: mongod --dbpath "C:\Users\Medjedovic\Desktop\MongoDB\Server\3.2\data\db"

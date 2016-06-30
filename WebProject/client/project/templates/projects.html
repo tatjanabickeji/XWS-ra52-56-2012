@@ -1,0 +1,22 @@
+<div>
+    <table class="table table-striped">
+		<thead>
+            <tr>
+                <th>Code</th>
+				<th>Title</th>
+                <th>Description</th>
+                <th>Deadline</th>
+			</tr>
+         </thead>
+         <tbody>
+             <tr ng-repeat="project in projects">
+                 <td><a href="#/projects/{{project._id}}">{{ project.code }}</a></td>
+                 <td>{{ project.title }}</td>
+                 <td>{{ project.description }}</td>
+                 <td><span ng-bind="project.deadline | date:'dd/MM/yyyy HH:mm:ss'"></span></td>
+             </tr>
+         </tbody>
+    </table>    
+</div>
+
+<div ng-include="'project/templates/addProject.html'" ng-show="user.role"></div>
